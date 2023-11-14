@@ -1,0 +1,23 @@
+{
+  "name": "gr2-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Arima057nn/GR2-BE.git"
+  },
+  "author": "Arima Kishou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Arima057nn/GR2-BE/issues"
+  },
+  "homepage": "https://github.com/Arima057nn/GR2-BE#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "twilio": "^4.19.0"
+  }
+}
