@@ -1,6 +1,7 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
+const RoleModel = require("../models/roleModel");
 
 const getAllUser = async (req, res, next) => {
   try {
@@ -26,17 +27,22 @@ const login = async (req, res, next) => {
       existingUser.password
     );
 
+    const role = await RoleModel.findOne({ _id: existingUser.roleId });
+
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    const accessToken = jwt.sign(user, "your-secret-key", {
+    const account = {
+      email: existingUser.email,
+      role: role.value,
+    };
+    const accessToken = jwt.sign(account, "your-secret-key", {
       expiresIn: "300s",
     });
 
     res.status(200).json({
       message: "Login successful",
-      user: existingUser,
       token: accessToken,
     });
   } catch (error) {
@@ -73,8 +79,26 @@ const register = async (req, res, next) => {
   }
 };
 
+const authenToken = (req, res, next) => {
+  const authorizationHeader = req.headers["authorization"];
+  // `Beaer [token]`
+  const token = authorizationHeader && authorizationHeader.split(" ")[1];
+  if (!token) return res.status(401).send("Access denied. No token provided.");
+
+  jwt.verify(token, "your-secret-key", (err, data) => {
+    if (err) return res.status(403).send("Invalid token.");
+
+    req.user = data;
+    console.log("User", req.user);
+    if (req.user.role !== 3)
+      return res.status(403).send("Unauthorized access. Not User");
+    next();
+  });
+};
+
 module.exports = {
   getAllUser,
   register,
   login,
+  authenToken,
 };
