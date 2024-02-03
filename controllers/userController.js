@@ -79,7 +79,7 @@ const register = async (req, res, next) => {
   }
 };
 
-const authenToken = (req, res, next) => {
+const authenTokenUser = (req, res, next) => {
   const authorizationHeader = req.headers["authorization"];
   // `Beaer [token]`
   const token = authorizationHeader && authorizationHeader.split(" ")[1];
@@ -96,9 +96,45 @@ const authenToken = (req, res, next) => {
   });
 };
 
+const authenTokenManager = (req, res, next) => {
+  const authorizationHeader = req.headers["authorization"];
+  // `Beaer [token]`
+  const token = authorizationHeader && authorizationHeader.split(" ")[1];
+  if (!token) return res.status(401).send("Access denied. No token provided.");
+
+  jwt.verify(token, "your-secret-key", (err, data) => {
+    if (err) return res.status(403).send("Invalid token.");
+
+    req.user = data;
+    console.log("User", req.user);
+    if (req.user.role !== 2)
+      return res.status(403).send("Unauthorized access. Not Manager");
+    next();
+  });
+};
+
+const authenTokenAdmin = (req, res, next) => {
+  const authorizationHeader = req.headers["authorization"];
+  // `Beaer [token]`
+  const token = authorizationHeader && authorizationHeader.split(" ")[1];
+  if (!token) return res.status(401).send("Access denied. No token provided.");
+
+  jwt.verify(token, "your-secret-key", (err, data) => {
+    if (err) return res.status(403).send("Invalid token.");
+
+    req.user = data;
+    console.log("User", req.user);
+    if (req.user.role !== 1)
+      return res.status(403).send("Unauthorized access. Not Admin");
+    next();
+  });
+};
+
 module.exports = {
   getAllUser,
   register,
   login,
-  authenToken,
+  authenTokenUser,
+  authenTokenManager,
+  authenTokenAdmin,
 };

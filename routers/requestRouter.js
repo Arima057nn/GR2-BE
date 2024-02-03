@@ -4,15 +4,17 @@ const {
   getAllRequest,
   createRequest,
   getRequestsByUser,
+  getRequestsByStatus,
   getRequest,
   changeStatusRequest,
 } = require("../controllers/requestController");
-const { authenToken } = require("../controllers/userController");
+const { authenTokenUser } = require("../controllers/userController");
 const router = express.Router();
 
 router.get("/", getAllRequest);
-router.post("/create", authenToken, createRequest);
+router.post("/create", authenTokenUser, createRequest);
 router.get("/user/:userId", getRequestsByUser);
+router.get("/status/", getRequestsByStatus);
 router.get("/:_id", getRequest);
 router.put("/:_id", changeStatusRequest);
 

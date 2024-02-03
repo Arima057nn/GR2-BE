@@ -61,6 +61,23 @@ const getRequest = async (req, res, next) => {
       res.status(500).json({ error: "Failed to get request" });
     });
 };
+
+const getRequestsByStatus = async (req, res, next) => {
+  const { status } = req.body;
+  RequestModel.find({
+    status: status,
+  })
+    .populate("userId")
+    .populate("assignee")
+    .populate("categoryId")
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Failed to get request" });
+    });
+};
+
 const changeStatusRequest = async (req, res, next) => {
   const { _id } = req.params;
   RequestModel.findByIdAndUpdate(_id, req.body, { new: true })
@@ -75,6 +92,7 @@ module.exports = {
   getAllRequest,
   createRequest,
   getRequestsByUser,
+  getRequestsByStatus,
   getRequest,
   changeStatusRequest,
 };
