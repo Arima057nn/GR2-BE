@@ -2,16 +2,10 @@ const mongoose = require("mongoose");
 
 const RequestSchema = new mongoose.Schema(
   {
-    tittle: { type: String },
+    title: { type: String },
     content: { type: String },
     status: { type: Number },
-    level: { type: Number },
     userId: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "Users",
-      require: true,
-    },
-    assignee: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "Users",
       require: true,

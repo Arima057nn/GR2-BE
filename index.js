@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const db = require("./configs/db");
 const userRouter = require("./routers/userRouter");
@@ -11,6 +12,7 @@ const bodyParser = require("body-parser");
 db.connectDB();
 const port = 3030;
 
+app.use(cors());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json

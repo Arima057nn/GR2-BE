@@ -15,12 +15,10 @@ const createRequest = async (req, res, next) => {
     const request = req.body;
 
     const newRequest = await RequestModel.create({
-      tittle: request.tittle,
+      title: request.title,
       content: request.content,
       status: request.status,
-      level: request.level,
       userId: request.userId,
-      assignee: request.assignee,
       categoryId: request.categoryId,
     });
 

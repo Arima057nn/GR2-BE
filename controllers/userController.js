@@ -38,12 +38,15 @@ const login = async (req, res, next) => {
       role: role.value,
     };
     const accessToken = jwt.sign(account, "your-secret-key", {
-      expiresIn: "300s",
+      expiresIn: "3000s",
     });
 
     res.status(200).json({
       message: "Login successful",
-      token: accessToken,
+      email: existingUser.email,
+      role: role.value,
+      userId: existingUser._id,
+      accessToken: accessToken,
     });
   } catch (error) {
     console.error("Error logging in:", error);
