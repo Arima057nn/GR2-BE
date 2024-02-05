@@ -36,6 +36,8 @@ const login = async (req, res, next) => {
     const account = {
       email: existingUser.email,
       role: role.value,
+      departmentId: existingUser.departmentId,
+      userId: existingUser._id,
     };
     const accessToken = jwt.sign(account, "your-secret-key", {
       expiresIn: "3000s",
@@ -92,7 +94,7 @@ const authenTokenUser = (req, res, next) => {
     if (err) return res.status(403).send("Invalid token.");
 
     req.user = data;
-    console.log("User", req.user);
+    // console.log("User", req.user);
     if (req.user.role !== 3)
       return res.status(403).send("Unauthorized access. Not User");
     next();

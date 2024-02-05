@@ -1,4 +1,6 @@
 const RequestModel = require("../models/requestModel");
+const RoleModel = require("../models/roleModel");
+const UserModel = require("../models/userModel");
 
 const getAllRequest = async (req, res, next) => {
   try {
@@ -13,6 +15,14 @@ const getAllRequest = async (req, res, next) => {
 const createRequest = async (req, res, next) => {
   try {
     const request = req.body;
+    const user = req.user;
+    const roleManager = await RoleModel.findOne({
+      value: 2,
+    });
+    const foundManager = await UserModel.findOne({
+      departmentId: user.departmentId,
+      roleId: roleManager._id,
+    });
 
     const newRequest = await RequestModel.create({
       title: request.title,
@@ -20,8 +30,8 @@ const createRequest = async (req, res, next) => {
       status: request.status,
       userId: request.userId,
       categoryId: request.categoryId,
+      managerId: foundManager,
     });
-
     res.json(newRequest);
   } catch (error) {
     console.error("Error creating request:", error);
@@ -34,7 +44,23 @@ const getRequestsByUser = async (req, res, next) => {
   RequestModel.find({
     userId: userId,
   })
-    .populate("assignee")
+    .populate("categoryId")
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Failed to get requests" });
+    });
+};
+
+const getRequestsByManager = async (req, res, next) => {
+  const { status } = req.params;
+  const user = req.user;
+
+  RequestModel.find({
+    managerId: user.userId,
+    status,
+  })
     .populate("categoryId")
     .then((data) => {
       res.json(data);
@@ -50,7 +76,6 @@ const getRequest = async (req, res, next) => {
     _id: _id,
   })
     .populate("userId")
-    .populate("assignee")
     .populate("categoryId")
     .then((data) => {
       res.json(data);
@@ -66,7 +91,7 @@ const getRequestsByStatus = async (req, res, next) => {
     status: status,
   })
     .populate("userId")
-    .populate("assignee")
+
     .populate("categoryId")
     .then((data) => {
       res.json(data);
@@ -90,6 +115,7 @@ module.exports = {
   getAllRequest,
   createRequest,
   getRequestsByUser,
+  getRequestsByManager,
   getRequestsByStatus,
   getRequest,
   changeStatusRequest,

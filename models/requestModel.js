@@ -15,6 +15,11 @@ const RequestSchema = new mongoose.Schema(
       ref: "Categories",
       require: true,
     },
+    managerId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "Users",
+      require: true,
+    },
   },
   {
     timestamps: true,
