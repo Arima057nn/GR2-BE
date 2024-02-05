@@ -21,6 +21,6 @@ router.get("/user/:userId", getRequestsByUser);
 router.get("/manager/:status", authenTokenManager, getRequestsByManager);
 router.get("/status/", getRequestsByStatus);
 router.get("/:_id", getRequest);
-router.put("/:_id", changeStatusRequest);
+router.put("/change", changeStatusRequest);
 
 module.exports = router;

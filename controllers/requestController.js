@@ -102,15 +102,22 @@ const getRequestsByStatus = async (req, res, next) => {
 };
 
 const changeStatusRequest = async (req, res, next) => {
-  const { _id } = req.params;
-  RequestModel.findByIdAndUpdate(_id, req.body, { new: true })
+  const requestId = req.query.requestId;
+  const status = req.query.status;
+  console.log(requestId, status);
+  RequestModel.findByIdAndUpdate(requestId, { status: status }, { new: true })
     .then((data) => {
+      if (!data) {
+        return res.status(404).json({ error: "Request not found" });
+      }
       res.json(data);
     })
     .catch((error) => {
+      console.error("Error updating request:", error);
       res.status(500).json({ error: "Failed to update request" });
     });
 };
+
 module.exports = {
   getAllRequest,
   createRequest,
