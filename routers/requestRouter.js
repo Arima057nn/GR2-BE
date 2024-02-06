@@ -9,6 +9,7 @@ const {
   changeStatusRequest,
   getRequestsByManager,
   getRequestsByAdmin,
+  deleteAllRequests,
 } = require("../controllers/requestController");
 const {
   authenTokenUser,
@@ -25,5 +26,6 @@ router.get("/admin/:status", authenTokenAdmin, getRequestsByAdmin);
 router.get("/status/", getRequestsByStatus);
 router.get("/:_id", getRequest);
 router.put("/change", changeStatusRequest);
+router.delete("/delete", deleteAllRequests);
 
 module.exports = router;

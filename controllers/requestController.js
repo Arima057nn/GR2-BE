@@ -133,6 +133,25 @@ const changeStatusRequest = async (req, res, next) => {
     });
 };
 
+const deleteAllRequests = async (req, res, next) => {
+  try {
+    // Xóa hết các request trong cơ sở dữ liệu
+    await RequestModel.deleteMany({});
+
+    // Trả về kết quả thành công
+    res
+      .status(200)
+      .json({ success: true, message: "All requests have been deleted." });
+  } catch (error) {
+    // Xử lý lỗi nếu có
+    console.error("Error deleting requests:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting requests.",
+    });
+  }
+};
+
 module.exports = {
   getAllRequest,
   createRequest,
@@ -142,4 +161,5 @@ module.exports = {
   getRequest,
   changeStatusRequest,
   getRequestsByAdmin,
+  deleteAllRequests,
 };
