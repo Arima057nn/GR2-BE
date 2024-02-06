@@ -70,6 +70,21 @@ const getRequestsByManager = async (req, res, next) => {
     });
 };
 
+const getRequestsByAdmin = async (req, res, next) => {
+  const { status } = req.params;
+
+  RequestModel.find({
+    status,
+  })
+    .populate("categoryId")
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Failed to get requests" });
+    });
+};
+
 const getRequest = async (req, res, next) => {
   const { _id } = req.params;
   RequestModel.find({
@@ -126,4 +141,5 @@ module.exports = {
   getRequestsByStatus,
   getRequest,
   changeStatusRequest,
+  getRequestsByAdmin,
 };
